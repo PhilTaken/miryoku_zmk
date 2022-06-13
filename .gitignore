@@ -1,0 +1,6 @@
+.envrc
+tags
+.direnv
+build/
+.ccls-cache/
+*.uf2
