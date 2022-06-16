@@ -52,15 +52,17 @@
       ${pyenv}/bin/west update
       cd app
 
+      rm -rf build/
+
       export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
       export GNUARMEMB_TOOLCHAIN_PATH=${pkgs.gcc-arm-embedded}
 
       cmake_config="-DZMK_CONFIG=${./.}/config -DCMAKE_MAKE_PROGRAM:PATH=${pkgs.ninja}/bin/ninja"
 
-      ${pyenv}/bin/west build -b nice_nano_v2 -- -DSHIELD=corne_left $cmake_config
+      ${pyenv}/bin/west build -p -b nice_nano_v2 -- -DSHIELD=corne_left $cmake_config
       cp build/zephyr/zmk.uf2 $origdir/left.uf2
 
-      ${pyenv}/bin/west build -b nice_nano_v2 -- -DSHIELD=corne_right $cmake_config
+      ${pyenv}/bin/west build -p -b nice_nano_v2 -- -DSHIELD=corne_right $cmake_config
       cp build/zephyr/zmk.uf2 $origdir/right.uf2
 
       cd $origdir
@@ -68,9 +70,7 @@
   in rec {
     devShell = pkgs.mkShell {
       nativeBuildInputs = [ pkgs.bashInteractive ];
-      buildInputs = with pkgs; [
-        buildscript
-      ];
+      buildInputs = with pkgs; [ pyenv ];
     };
 
     apps = rec {
